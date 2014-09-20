@@ -57,7 +57,7 @@ app.all('*', function(req, res, next){
   next();
 });
 
-app.get('/welcome', function(req, res) {
+app.get('/', function(req, res) {
 	res.render('index');
 });
 
