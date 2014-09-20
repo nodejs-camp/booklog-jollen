@@ -25,7 +25,7 @@ app.Post = Backbone.Model.extend({
  * VIEWS
  **/
   app.PostView = Backbone.View.extend({
-  	el: '#message',
+  	el: '#blog-post',
     events: {
     },
     initialize: function() {
@@ -39,7 +39,7 @@ app.Post = Backbone.Model.extend({
     render: function() {
         var data = this.template(this.model.attributes);
 
-        this.$el.find('#message').html(data);
+        this.$el.html(data);
         return this;
     }
   });
