@@ -46,10 +46,10 @@ block content
 
     script(type='text/template', id='tmpl-post')
       <% _.each(posts, function(post) { %>
-      h1 Blog Post Title
+      h1 <%= post.subject %>
       p.lead
         | by
-        a(href='#') <%= post.subject %>
+        a(href='#')
       hr
       p
         span.glyphicon.glyphicon-time
