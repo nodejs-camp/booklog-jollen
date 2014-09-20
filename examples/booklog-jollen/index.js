@@ -109,9 +109,7 @@ app.get('/download', function(req, res) {
 });
 
 app.get('/post', function(req, res) {
-	res.render('post', {
-		posts: posts
-	});
+	res.render('post');
 });
 
 app.get('/1/post/:id', function(req, res) {	
