@@ -28,7 +28,7 @@ var postSchema = new mongoose.Schema({
 });
 
 app.db = {
-	model: mongoose.model('Post', postSchema)
+	posts: mongoose.model('Post', postSchema)
 };
 
 // Optional since express defaults to CWD/views
@@ -39,14 +39,6 @@ app.set('views', __dirname + '/views');
 // which prevents the need for extensions
 // (although you can still mix and match)
 app.set('view engine', 'jade');
-
-var posts = [{
-	subject: "Hello",
-	content: "Hi !"
-}, {
-	subject: "World",
-	content: "Hi !"
-}];
 
 var bodyParser = require('body-parser');
 
@@ -124,24 +116,24 @@ app.get('/post', function(req, res) {
 
 app.get('/1/post/:id', function(req, res) {	
 	var id = req.params.id;
-	var model = req.app.db.model;
+	var posts = req.app.db.posts;
 
-	model.findOne({_id: id}, function(err, post) {
+	posts.findOne({_id: id}, function(err, post) {
 		res.send({post: post});	
 	});
 });
 
 app.get('/1/post', function(req, res) {	
-	var model = req.app.db.model;
+	var posts = req.app.db.posts;
 
-	model.find(function(err, posts) {
+	posts.find(function(err, posts) {
 		res.send({posts: posts});	
 	});
 });
 
 
 app.post('/1/post', function(req, res) {
-	var model = req.app.db.model;
+	var posts = req.app.db.posts;
 
 	var subject;
 	var content;
@@ -154,14 +146,13 @@ app.post('/1/post', function(req, res) {
 		content = req.body.content;		
 	}
 
-	var post = {
+	var data = {
 		subject: subject,
 		content: content
 	};
 
-	//posts.push(post);
-	var card = new model(post);
-	card.save();
+	var post = new posts(data);
+	post.save();
 
 	res.send({ status: 'OK'});
 });
