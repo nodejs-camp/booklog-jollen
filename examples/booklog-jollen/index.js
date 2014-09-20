@@ -136,7 +136,7 @@ app.post('/1/post', function(req, res) {
 	var subject;
 	var content;
 
-	if (typeof(req.body) === 'undefined') {
+	if (typeof(req.body.subject) === 'undefined') {
 		subject = req.query.subject;
 		content = req.query.content;
 	} else {
