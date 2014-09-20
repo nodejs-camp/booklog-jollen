@@ -1,25 +1,13 @@
 extends layout
 
+block feet
+  script(src='views/index.js')
+
 block content
     .container
         .row
             .col-lg-8
-                h1 Blog Post Title
-                p.lead
-                  | by
-                  a(href='#') Start Bootstrap
-                hr
-                p
-                  span.glyphicon.glyphicon-time
-                  | Posted on August 24, 2013 at 9:00 PM
-                hr
-                img.img-responsive(src='http://placehold.it/900x300', alt='')
-                hr
-                p.lead
-                  | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus, vero, obcaecati, aut, error quam sapient    nemo saepe quibusdam sit excepturi nam quia corporis eligendi eos magni recusandae laborum minus inventore?
-                p
-                  | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsu    rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.
-                hr
+
             .col-md-4
               .well
                 h4 Blog Search
@@ -55,3 +43,33 @@ block content
                 h4 Side Widget Well
                 p
                   | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, perspiciatis adipisci accusamus laudantium odit aliquam repellat tempore quos aspernatur vero.
+
+    script(type='text/template', id='tmpl-post')
+      <% _.each(posts, function(post) { %>
+      h1 Blog Post Title
+      p.lead
+        | by
+        a(href='#') <%= post.subject %>
+      hr
+      p
+        span.glyphicon.glyphicon-time
+        | Posted on August 24, 2013 at 9:00 PM
+      hr
+      img.img-responsive(src='http://placehold.it/900x300', alt='')
+      hr
+      p.lead
+        | <%= post.content %>
+      hr
+      <% }); %>
+
+
+
+
+
+
+
+
+
+
+
+
