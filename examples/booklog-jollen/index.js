@@ -203,6 +203,7 @@ app.get('/1/post', function(req, res) {
 
 	posts
 	.find()
+	.populate('userId')
 	.exec(function(err, posts) {
 		res.send({posts: posts});	
 	});
