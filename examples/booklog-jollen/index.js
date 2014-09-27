@@ -27,8 +27,17 @@ var postSchema = new mongoose.Schema({
     content: String
 });
 
+var userSchema = new mongoose.Schema({
+    username: { type: String, unique: true },
+    displayName: { type: String, unique: true },
+    email: { type: String, unique: true },
+    timeCreated: { type: Date, default: Date.now },
+    facebook: {}
+});
+
 app.db = {
-	posts: mongoose.model('Post', postSchema)
+	posts: mongoose.model('Post', postSchema),
+	users: mongoose.mongoose('User', userSchema)
 };
 
 // Optional since express defaults to CWD/views
