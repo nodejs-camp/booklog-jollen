@@ -78,17 +78,25 @@ passport.use(new FacebookStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
     
-	  var obj = {
-	    username: profile.username,
-	    displayName: profile.displayName,
-	    email: '',
-	    facebook: profile
-	   };
 
-	   var user = new app.db.users(obj);
-	   user.save();
 
-   	   return done(null, user); // verify
+	   app.db.users.findOne({"facebook._json.id": profile._json.id}, function(err, user) {
+	   	if (err) {
+		  var obj = {
+		    username: profile.username,
+		    displayName: profile.displayName,
+		    email: '',
+		    facebook: profile
+		   };
+
+		   var doc = new app.db.users(obj);
+	   	   doc.save();
+
+	   	   user = doc;
+	   	}
+
+	   	return done(null, user); // verify
+	   });
   }
 ));
 
@@ -196,7 +204,9 @@ app.get('/1/post/:id', function(req, res) {
 app.get('/1/post', function(req, res) {	
 	var posts = req.app.db.posts;
 
-	posts.find(function(err, posts) {
+	posts
+	.find()
+	.exec(function(err, posts) {
 		res.send({posts: posts});	
 	});
 });
