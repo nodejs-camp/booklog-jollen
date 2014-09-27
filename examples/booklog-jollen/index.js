@@ -37,7 +37,7 @@ var userSchema = new mongoose.Schema({
 
 app.db = {
 	posts: mongoose.model('Post', postSchema),
-	users: mongoose.mongoose('User', userSchema)
+	users: mongoose.model('User', userSchema)
 };
 
 // Optional since express defaults to CWD/views
@@ -50,13 +50,24 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 
 var bodyParser = require('body-parser');
+var session = require('express-session');
+var passport = require('passport')
+  , FacebookStrategy = require('passport-facebook').Strategy;
 
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+app.use(session({ secret: 'keyboard cat' }));
+app.use(passport.initialize());
+app.use(passport.session());
 
-var passport = require('passport')
-  , FacebookStrategy = require('passport-facebook').Strategy;
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
 
 passport.use(new FacebookStrategy({
     clientID: '1559480364270197',
@@ -65,6 +76,7 @@ passport.use(new FacebookStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
     console.log(profile);
+    return done(null, profile); // verify
   }
 ));
 
@@ -90,6 +102,14 @@ app.all('*', function(req, res, next){
   // res.set('Access-Control-Allow-Max-Age', 3600);
   if ('OPTIONS' == req.method) return res.send(200);
   next();
+});
+
+app.get('/', function(req, res, next) {
+	if (req.isAuthenticated()) {
+		next();
+	} else {
+		res.render('login');
+	}
 });
 
 app.get('/', function(req, res) {
