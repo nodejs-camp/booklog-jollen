@@ -179,6 +179,11 @@ app.get('/post', function(req, res) {
 	res.render('post');
 });
 
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
+
 app.get('/1/post/:id', function(req, res) {	
 	var id = req.params.id;
 	var posts = req.app.db.posts;
