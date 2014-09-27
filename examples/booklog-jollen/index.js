@@ -78,7 +78,7 @@ passport.use(new FacebookStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
 	   app.db.users.findOne({"facebook._json.id": profile._json.id}, function(err, user) {
-		   	if (err) {
+		   	if (!user) {
 			  var obj = {
 			    username: profile.username,
 			    displayName: profile.displayName,
