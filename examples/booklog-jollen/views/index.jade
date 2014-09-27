@@ -53,7 +53,7 @@ block content
           | &nbsp;<%= post.userId.facebook.displayName %>
         p
           span.glyphicon.glyphicon-time
-          | Posted on August 24, 2013 at 9:00 PM
+          | Posted on <%= post.userId.timeCreated %>
         img.img-responsive(src='http://placehold.it/900x300', alt='')
         p.lead
           | <%= post.content %>
