@@ -24,7 +24,9 @@ db.once('open', function callback () {
 
 var postSchema = new mongoose.Schema({
     subject: { type: String, default: ''},
-    content: String
+    content: String,
+
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
 var userSchema = new mongoose.Schema({
@@ -75,8 +77,18 @@ passport.use(new FacebookStrategy({
     callbackURL: "http://localhost:3000/auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, done) {
-    console.log(profile);
-    return done(null, profile); // verify
+    
+	  var obj = {
+	    username: profile.username,
+	    displayName: profile.displayName,
+	    email: '',
+	    facebook: profile
+	   };
+
+	   var user = new app.db.users(obj);
+	   user.save();
+
+   	   return done(null, user); // verify
   }
 ));
 
@@ -185,8 +197,17 @@ app.get('/1/post', function(req, res) {
 });
 
 
+app.post('/1/post', function(req, res, next) {
+	if (req.isAuthenticated()) {
+		next();
+	} else {
+		res.render('login');
+	}
+});
+
 app.post('/1/post', function(req, res) {
 	var posts = req.app.db.posts;
+	var userId = req.user._id;
 
 	var subject;
 	var content;
@@ -200,6 +221,7 @@ app.post('/1/post', function(req, res) {
 	}
 
 	var data = {
+		userId: userId,
 		subject: subject,
 		content: content
 	};
