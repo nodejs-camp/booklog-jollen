@@ -17,6 +17,7 @@ block content
                     button.btn.btn-default.btn-search(type='button')
                       span.glyphicon.glyphicon-search
               .well#search-result
+        .row#form-section
 
     script(type='text/template', id='tmpl-post')
       div#actions
@@ -43,6 +44,18 @@ block content
       <% _.each(posts, function(post) { %>
       p <%= post.subject %>
       <% }); %>
+
+    script(type='text/template', id='tmpl-form')
+      form.form-horizontal
+        h3 Leave a Message
+        .input-group
+          label.control-label(for='subject') Subject
+          input.form-control#subject(name='subject', type='text')
+        .input-group
+          label.control-label(for='subject') Content
+          textarea.form-control#content(name='content')
+        .input-group
+          button#btn-submit.btn.btn-primary(name='btn-submit') Save
 
 
 

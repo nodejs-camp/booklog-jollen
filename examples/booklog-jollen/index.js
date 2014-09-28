@@ -61,6 +61,8 @@ var session = require('express-session');
 var passport = require('passport')
   , FacebookStrategy = require('passport-facebook').Strategy;
 
+var jsonParser = bodyParser.json()
+
 app.use(bodyParser.urlencoded({
   extended: true
 }));
@@ -247,20 +249,15 @@ app.post('/1/post', function(req, res, next) {
 	}
 });
 
-app.post('/1/post', function(req, res) {
+app.post('/1/post', jsonParser, function(req, res) {
 	var posts = req.app.db.posts;
 	var userId = req.user._id;
 
 	var subject;
 	var content;
 
-	if (typeof(req.body.subject) === 'undefined') {
-		subject = req.query.subject;
-		content = req.query.content;
-	} else {
-		subject = req.body.subject;
-		content = req.body.content;		
-	}
+	subject = req.body.subject;
+	content = req.body.content;		
 
 	var data = {
 		userId: userId,

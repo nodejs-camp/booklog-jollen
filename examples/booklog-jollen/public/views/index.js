@@ -41,9 +41,53 @@ app.Post = Backbone.Model.extend({
   }
 });
 
+app.SinglePost = Backbone.Model.extend({  
+  url: 'http://localhost:3000/1/post',
+  defaults: {
+    success: false,
+    errors: [],
+    errfor: {},
+
+    content: '',
+    subject: ''
+  }
+});
+
 /**
  * VIEWS
  **/
+  app.FormView = Backbone.View.extend({
+    el: '#form-section',
+    events: {
+      'submit form': 'preventSubmit',
+      'click #btn-submit': 'performSubmit'
+    },
+    initialize: function() {
+        this.model = new app.SinglePost();
+
+        this.template = _.template($('#tmpl-form').html());
+        this.render();
+    },
+    render: function() {
+        var data = this.template();
+
+        this.$el.html(data);
+        return this;
+    },
+    preventSubmit: function(event) {
+        event.preventDefault();
+    },
+    performSubmit: function() {
+      var subject = this.$el.find('#subject').val();
+      var content = this.$el.find('#content').val();
+
+      this.model.save({
+        subject: subject,
+        content: content
+      });
+    }
+  });
+
   app.SearchView = Backbone.View.extend({
     el: '#search-section',
     events: {
@@ -88,7 +132,7 @@ app.Post = Backbone.Model.extend({
         var data = this.template(this.model.attributes);
 
         this.$el.html(data);
-        
+
         return this;
     },
     performFilter: function() {
@@ -109,4 +153,5 @@ app.Post = Backbone.Model.extend({
   $(document).ready(function() {
     app.postView = new app.PostView();
     app.searchView = new app.SearchView();
+    app.formView = new app.FormView();
   });
