@@ -198,6 +198,13 @@ app.get('/1/post/:id', function(req, res) {
 	});
 });
 
+app.get('/1/post/tag/:tag', function(req, res) {	
+	var tag = req.params.tag;
+
+	// TBD:
+	console.log("SEARCHING...");
+});
+
 app.get('/1/post', function(req, res) {	
 	var posts = req.app.db.posts;
 
