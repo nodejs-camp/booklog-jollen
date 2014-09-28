@@ -28,6 +28,7 @@ var postSchema = new mongoose.Schema({
     subject: { type: String, default: ''},
     content: String,
 
+    timeCreated: { type: Date, default: Date.now },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
@@ -216,10 +217,22 @@ app.get('/1/post/tag/:tag', function(req, res) {
 
 app.get('/1/post', function(req, res) {	
 	var posts = req.app.db.posts;
+	var sort = req.query.sort; // ?sort=date
+	var options = {};
+
+	// Default options
+	options = {
+		sort: 'timeCreated'
+	};
+
+	if (sort === 'date') {
+		options.sort = '-timeCreated'
+	}
 
 	posts
-	.find()
+	.find({})
 	.populate('userId')
+	.sort(options.sort)
 	.exec(function(err, posts) {
 		res.send({posts: posts});	
 	});

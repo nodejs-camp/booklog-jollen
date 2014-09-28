@@ -8,7 +8,7 @@
  **/
 app.Search = Backbone.Model.extend({  
   url: function() {
-    return 'http://localhost:3000/1/post/tag/' + this.attributes.tag
+    return 'http://localhost:3000/1/post/tag/' + this.tag
   },
   tag: '',
   defaults: {
@@ -24,7 +24,10 @@ app.Search = Backbone.Model.extend({
 });
 
 app.Post = Backbone.Model.extend({  
-  url: 'http://localhost:3000/1/post',
+  url: function() {
+    return 'http://localhost:3000/1/post' + this.query
+  },
+  query: '',
   defaults: {
     success: false,
     errors: [],
@@ -62,7 +65,7 @@ app.Post = Backbone.Model.extend({
     performSearch: function() {
       var tag = this.$el.find('#search-tag').val();
 
-      this.model.set('tag', tag);
+      this.model.tag = tag;
       this.model.fetch();
     }
   });
@@ -70,13 +73,14 @@ app.Post = Backbone.Model.extend({
   app.PostView = Backbone.View.extend({
   	el: '#blog-post',
     events: {
+      'click .btn-filter': 'performFilter'
     },
     initialize: function() {
         this.model = new app.Post();
         this.template = _.template($('#tmpl-post').html());
 
         this.model.bind('change', this.render, this);
-        
+
         this.model.fetch();
     },
     render: function() {
@@ -84,6 +88,10 @@ app.Post = Backbone.Model.extend({
 
         this.$el.html(data);
         return this;
+    },
+    performFilter: function() {
+        this.model.query = '?sort=date';
+        this.model.fetch();
     }
   });
 

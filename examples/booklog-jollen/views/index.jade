@@ -19,6 +19,8 @@ block content
               .well#search-result
 
     script(type='text/template', id='tmpl-post')
+      div#actions
+        button.btn.btn-primary.btn-filter 日期排序
       <% _.each(posts, function(post) { %>
       .well
         h1 <%= post.subject %>
