@@ -9,12 +9,12 @@ block content
             .col-lg-8
               div#blog-post
             .col-md-4
-              .well
-                h4 Blog Search
+              .well#search-section
+                h4 Author Search
                 .input-group
-                  input.form-control(type='text')
+                  input.form-control#search-tag(type='text')
                   span.input-group-btn
-                    button.btn.btn-default(type='button')
+                    button.btn.btn-default.btn-search(type='button')
                       span.glyphicon.glyphicon-search
               .well
                 h4 Blog Categories
@@ -59,7 +59,17 @@ block content
           | <%= post.content %>
       <% }); %>
 
-
+    script(type='text/template', id='tmpl-results')
+      <% _.each(posts, function(post) { %>
+      .well
+        h1 <%= post.subject %>
+        //-p.lead
+        //-  | by
+        //-  | &nbsp;<%= post.userId.facebook.displayName %>
+        //-p
+        //-  span.glyphicon.glyphicon-time
+        //-  | Posted on <%= post.userId.timeCreated %>
+      <% }); %>
 
 
 
