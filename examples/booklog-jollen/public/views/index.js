@@ -73,7 +73,8 @@ app.Post = Backbone.Model.extend({
   app.PostView = Backbone.View.extend({
   	el: '#blog-post',
     events: {
-      'click .btn-filter': 'performFilter'
+      'click .btn-filter': 'performFilter',
+      'click .btn-format': 'performFormat'
     },
     initialize: function() {
         this.model = new app.Post();
@@ -87,11 +88,18 @@ app.Post = Backbone.Model.extend({
         var data = this.template(this.model.attributes);
 
         this.$el.html(data);
+        
         return this;
     },
     performFilter: function() {
         this.model.query = '?sort=date';
         this.model.fetch();
+    },
+    performFormat: function() {
+        this.$el.find('.post-date').each(function () {
+          var me = $(this);
+          me.html( moment( me.text() ).fromNow() );
+        });
     }
   });
 

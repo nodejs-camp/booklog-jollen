@@ -20,16 +20,19 @@ block content
 
     script(type='text/template', id='tmpl-post')
       div#actions
-        button.btn.btn-primary.btn-filter 日期排序
+        .btn-group
+          button.btn.btn-primary.btn-filter 日期排序
+          button.btn.btn-primary.btn-format 日期格式
       <% _.each(posts, function(post) { %>
-      .well
+      .well(style='margin-top: 20px;')
         h1 <%= post.subject %>
         p.lead
           | by
           | &nbsp;<%= post.userId.facebook.displayName %>
         p
           span.glyphicon.glyphicon-time
-          | Posted on <%= post.userId.timeCreated %>
+          | Posted on 
+          span.post-date <%= post.userId.timeCreated %>
         img.img-responsive(src='http://placehold.it/900x300', alt='')
         p.lead
           | <%= post.content %>
