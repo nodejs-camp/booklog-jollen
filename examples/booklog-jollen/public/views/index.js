@@ -55,7 +55,7 @@ app.Post = Backbone.Model.extend({
     render: function() {
         var data = this.template(this.model.attributes);
 
-        this.$el.html(data);
+        $('#search-result').html(data);
 
         return this;
     },

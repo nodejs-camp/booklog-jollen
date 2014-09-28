@@ -16,33 +16,7 @@ block content
                   span.input-group-btn
                     button.btn.btn-default.btn-search(type='button')
                       span.glyphicon.glyphicon-search
-              .well
-                h4 Blog Categories
-                .row
-                  .col-lg-6
-                    ul.list-unstyled
-                      li
-                        a(href='#') Category Name
-                      li
-                        a(href='#') Category Name
-                      li
-                        a(href='#') Category Name
-                      li
-                        a(href='#') Category Name
-                  .col-lg-6
-                    ul.list-unstyled
-                      li
-                        a(href='#') Category Name
-                      li
-                        a(href='#') Category Name
-                      li
-                        a(href='#') Category Name
-                      li
-                        a(href='#') Category Name
-              .well
-                h4 Side Widget Well
-                p
-                  | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, perspiciatis adipisci accusamus laudantium odit aliquam repellat tempore quos aspernatur vero.
+              .well#search-result
 
     script(type='text/template', id='tmpl-post')
       <% _.each(posts, function(post) { %>
@@ -60,15 +34,9 @@ block content
       <% }); %>
 
     script(type='text/template', id='tmpl-results')
+      h4 Search Result
       <% _.each(posts, function(post) { %>
-      .well
-        h1 <%= post.subject %>
-        //-p.lead
-        //-  | by
-        //-  | &nbsp;<%= post.userId.facebook.displayName %>
-        //-p
-        //-  span.glyphicon.glyphicon-time
-        //-  | Posted on <%= post.userId.timeCreated %>
+      p <%= post.subject %>
       <% }); %>
 
 
