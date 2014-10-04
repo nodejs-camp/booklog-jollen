@@ -268,7 +268,7 @@ app.post('/1/post', jsonParser, function(req, res) {
 		if (subject.length === 0) 
 			workflow.outcome.errfor.subject = '這是必填欄位';
 
-		if (content.content === 0) 
+		if (content.length === 0) 
 			workflow.outcome.errfor.content = '這是必填欄位';
 
 		if (Object.keys(workflow.outcome.errfor).length !== 0)
