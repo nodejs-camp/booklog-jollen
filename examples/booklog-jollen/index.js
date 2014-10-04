@@ -388,7 +388,7 @@ app.put('/1/post/:postId/pay', function(req, res, next) {
 /**
  * GET /1/post/:postId/paid
  */
-app.put('/1/post/:postId/paid', function(req, res, next) {
+app.get('/1/post/:postId/paid', function(req, res, next) {
     var workflow = new events.EventEmitter();
     var postId = req.params.postId;
     var posts = req.app.db.posts;
