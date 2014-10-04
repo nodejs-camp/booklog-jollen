@@ -51,9 +51,11 @@ block content
         .form-group(class!='<%= errfor.subject ? "has-error" : "" %>')
           label.control-label(for='subject') Subject
           input.form-control#subject(name='subject', type='text')
-        .form-group
+          label.has-error.control-label.pull-right <%= errfor.subject %>
+        .form-group(class!='<%= errfor.content ? "has-error" : "" %>')
           label.control-label(for='subject') Content
           textarea.form-control#content(name='content')
+          label.has-error.control-label.pull-right <%= errfor.content %>
         .form-group
           button#btn-submit.btn.btn-primary(name='btn-submit') Save
 

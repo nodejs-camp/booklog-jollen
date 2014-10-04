@@ -265,11 +265,14 @@ app.post('/1/post', jsonParser, function(req, res) {
 		subject = req.body.subject;
 		content = req.body.content;	
 
-		if (subject === '') {
-			workflow.outcome.errfor.subject = '必填欄位';
+		if (subject.length !== 0) 
+			workflow.outcome.errfor.subject = '這是必填欄位';
 
+		if (content.length !== 0) 
+			workflow.outcome.errfor.content = '這是必填欄位';
+
+		if (Object.keys(workflow.outcome.errfor).length !== 0)
 			return res.send(workflow.outcome);
-		}
 
 		workflow.emit('savePost');
 	});
