@@ -31,7 +31,8 @@ var postSchema = new mongoose.Schema({
     timeCreated: { type: Date, default: Date.now },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 
-    orders: []
+    orders: [],
+    customers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
 postSchema.index({ content: 'text' });
@@ -319,7 +320,7 @@ app.put('/1/post/:postId', function(req, res) {
 });
 
 /**
- * POST /1/post/:postId/pay
+ * PUT /1/post/:postId/pay
  */
 app.put('/1/post/:postId/pay', function(req, res, next) {
     var workflow = new events.EventEmitter();
@@ -378,6 +379,33 @@ app.put('/1/post/:postId/pay', function(req, res, next) {
 				workflow.outcome.data = post;
 				return res.send(workflow.outcome);
 			});
+		});
+    });
+
+    return workflow.emit('validate');
+});
+
+/**
+ * GET /1/post/:postId/paid
+ */
+app.put('/1/post/:postId/paid', function(req, res, next) {
+    var workflow = new events.EventEmitter();
+    var postId = req.params.postId;
+    var posts = req.app.db.posts;
+    
+    workflow.outcome = {
+    	success: false
+    };
+
+    workflow.on('validate', function() {
+        workflow.emit('updateCustomer');
+    });
+
+    workflow.on('updateCustomer', function() {
+		posts
+		.findByIdAndUpdate(postId, { $addToSet: { customers: req.user._id } }, function(err, post) {
+			workflow.outcome.success = true;
+			return res.send(workflow.outcome);
 		});
     });
 
