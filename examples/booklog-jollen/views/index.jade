@@ -48,13 +48,13 @@ block content
     script(type='text/template', id='tmpl-form')
       form.form-horizontal
         h3 Leave a Message
-        .input-group
+        .form-group(class!='<%= errfor.subject ? "has-error" : "" %>')
           label.control-label(for='subject') Subject
           input.form-control#subject(name='subject', type='text')
-        .input-group
+        .form-group
           label.control-label(for='subject') Content
           textarea.form-control#content(name='content')
-        .input-group
+        .form-group
           button#btn-submit.btn.btn-primary(name='btn-submit') Save
 
 

@@ -66,10 +66,12 @@ app.SinglePost = Backbone.Model.extend({
         this.model = new app.SinglePost();
 
         this.template = _.template($('#tmpl-form').html());
-        this.render();
+        this.model.bind('change', this.render, this); 
+
+        this.render();       
     },
     render: function() {
-        var data = this.template();
+        var data = this.template(this.model.attributes);
 
         this.$el.html(data);
         return this;

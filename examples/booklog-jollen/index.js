@@ -60,6 +60,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var passport = require('passport')
   , FacebookStrategy = require('passport-facebook').Strategy;
+var events = require('events');
 
 var jsonParser = bodyParser.json()
 
@@ -141,7 +142,6 @@ app.get('/', function(req, res) {
 });
 
 app.get('/download', function(req, res) {
-	var events = require('events');
 	var workflow = new events.EventEmitter();
 
 	workflow.outcome = {
@@ -250,25 +250,47 @@ app.post('/1/post', function(req, res, next) {
 });
 
 app.post('/1/post', jsonParser, function(req, res) {
+	var workflow = new events.EventEmitter();
 	var posts = req.app.db.posts;
 	var userId = req.user._id;
-
 	var subject;
 	var content;
 
-	subject = req.body.subject;
-	content = req.body.content;		
-
-	var data = {
-		userId: userId,
-		subject: subject,
-		content: content
+	workflow.outcome = {
+		success: false,
+		errfor: {}
 	};
 
-	var post = new posts(data);
-	post.save();
+	workflow.on('validation', function() {
+		subject = req.body.subject;
+		content = req.body.content;	
 
-	res.send({ status: 'OK'});
+		if (subject === '') {
+			workflow.outcome.errfor.subject = '必填欄位';
+
+			return res.send(workflow.outcome);
+		}
+
+		workflow.emit('savePost');
+	});
+
+	workflow.on('savePost', function() {
+		var data = {
+			userId: userId,
+			subject: subject,
+			content: content
+		};
+
+		var post = new posts(data);
+		post.save();
+
+		workflow.outcome.success = true;
+		workflow.outcome.data = post;
+
+		res.send(workflow.outcome);
+	});
+
+	return workflow.emit('validation');
 });
 
 app.delete('/1/post', function(req, res) {
