@@ -346,8 +346,8 @@ app.put('/1/post/:postId/pay', function(req, res, next) {
 		            redirect_urls: {
 
 		                // http://localhost:3000/1/post/539eb886e8dbde4b39000007/paid?token=EC-4T17102178173001V&PayerID=QPPLBGBK5ZTVS
-		                return_url: 'https://localhost:3000/1/post/' + postId + '/paid',
-		                cancel_url: 'https://localhost:3000/1/post/' + postId + '/cancel'
+		                return_url: 'http://localhost:3000/1/post/' + postId + '/paid',
+		                cancel_url: 'http://localhost:3000/1/post/' + postId + '/cancel'
 		            },
 		            transactions: [{
 		                amount: {
@@ -392,13 +392,18 @@ app.get('/1/post/:postId/paid', function(req, res, next) {
     var workflow = new events.EventEmitter();
     var postId = req.params.postId;
     var posts = req.app.db.posts;
+    var payerId = req.query.PayerID;
+    var paymentId;
     
     workflow.outcome = {
     	success: false
     };
 
     workflow.on('validate', function() {
-        workflow.emit('updateCustomer');
+        //paypal.payment.execute(paymentId, { payer_id: payerId }, function (err, payment) {
+        //    return workflow.emit('updateCustomer');
+        //});
+        return workflow.emit('updateCustomer');
     });
 
     workflow.on('updateCustomer', function() {
