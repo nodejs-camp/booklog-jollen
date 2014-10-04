@@ -29,7 +29,7 @@ var postSchema = new mongoose.Schema({
     content: String,
 
     timeCreated: { type: Date, default: Date.now },
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 
     orders: []
 });
@@ -321,12 +321,14 @@ app.put('/1/post/:postId', function(req, res) {
 /**
  * POST /1/post/:postId/pay
  */
-app.POST('/1/post/:postId/pay', function(req, res, next) {
+app.post('/1/post/:postId/pay', function(req, res, next) {
     var workflow = new events.EventEmitter();
     var postId = req.params.postId;
     var posts = req.app.db.posts;
     
-    workflow.outcome = {};
+    workflow.outcome = {
+    	success: false
+    };
 
     workflow.on('validate', function() {
         workflow.emit('createPayment');
@@ -343,8 +345,8 @@ app.POST('/1/post/:postId/pay', function(req, res, next) {
 		            redirect_urls: {
 
 		                // http://localhost:3000/1/post/539eb886e8dbde4b39000007/paid?token=EC-4T17102178173001V&PayerID=QPPLBGBK5ZTVS
-		                return_url: 'https://localhost:3000/1/post/' + 'aaa' + '/paid',
-		                cancel_url: 'https://localhost:3000/1/post/' + 'aaa' + '/cancel'
+		                return_url: 'https://localhost:3000/1/post/' + postId + '/paid',
+		                cancel_url: 'https://localhost:3000/1/post/' + postId + '/cancel'
 		            },
 		            transactions: [{
 		                amount: {
@@ -371,14 +373,16 @@ app.POST('/1/post/:postId/pay', function(req, res, next) {
 		    };
 
 			posts
-			.update(postId, { $addToSet: { orders: order } }, function(err, post) {
-
+			.findByIdAndUpdate(postId, { $addToSet: { orders: order } }, function(err, post) {
+				workflow.outcome.success = true;
+				workflow.outcome.data = post;
+				return res.send(workflow.outcome);
 			});
 		});
     });
 
     return workflow.emit('validate');
-};
+});
 
 // change this to a better error handler in your code
 // sending stacktrace to users in production is not good
