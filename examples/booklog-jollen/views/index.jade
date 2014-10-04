@@ -27,7 +27,11 @@ block content
       <% _.each(posts, function(post) { %>
       .well(style='margin-top: 20px;')
         h1 <%= post.subject %>
-        button.btn.btn-warning(data-purchase-for!='<%= post._id %>') 購買全文
+        <% if (post.orders.length === 0) { %>
+        button.btn.btn-default(data-purchase-for!='<%= post._id %>') 購買全文
+        <% } else { %>
+        a.btn.btn-danger(href!='<%= post.orders[0].paypal.links[1].href %>', target='_blank') 線上付款
+        <% } %>
         p.lead
           | by
           | &nbsp;<%= post.userId.facebook.displayName %>
