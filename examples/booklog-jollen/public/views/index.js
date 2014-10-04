@@ -53,6 +53,17 @@ app.SinglePost = Backbone.Model.extend({
   }
 });
 
+app.PurchasePost = Backbone.Model.extend({  
+  url: function() {
+    return 'http://localhost:3000/1/post/' + this.attributes.id + '/pay'
+  },
+  defaults: {
+    success: false,
+    errors: [],
+    errfor: {},
+  }
+});
+
 /**
  * VIEWS
  **/
@@ -120,10 +131,12 @@ app.SinglePost = Backbone.Model.extend({
   	el: '#blog-post',
     events: {
       'click .btn-filter': 'performFilter',
-      'click .btn-format': 'performFormat'
+      'click .btn-format': 'performFormat',
+      'click [data-purchase-for]': 'performPurchase'
     },
     initialize: function() {
         this.model = new app.Post();
+        this.purchase = new app.PurchasePost();
         this.template = _.template($('#tmpl-post').html());
 
         this.model.bind('change', this.render, this);
@@ -145,6 +158,21 @@ app.SinglePost = Backbone.Model.extend({
         this.$el.find('.post-date').each(function () {
           var me = $(this);
           me.html( moment( me.text() ).fromNow() );
+        });
+    },
+    performPurchase: function(event) {
+        var me = this.$el.find(event.target);
+        var postId = me.data('purchase-for');
+        var self = this;
+
+        this.purchase.set('id', postId);
+        this.purchase.save(this.model.attributes, {
+          success: function(model, response, options) {
+            alert('訂購成功。等候付款！')
+          },
+          error: function(model, response, options) {
+            alert('失敗')
+          }
         });
     }
   });

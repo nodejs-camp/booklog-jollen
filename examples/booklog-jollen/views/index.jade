@@ -27,6 +27,7 @@ block content
       <% _.each(posts, function(post) { %>
       .well(style='margin-top: 20px;')
         h1 <%= post.subject %>
+        button.btn.btn-warning(data-purchase-for!='<%= post._id %>') 購買全文
         p.lead
           | by
           | &nbsp;<%= post.userId.facebook.displayName %>
@@ -34,9 +35,6 @@ block content
           span.glyphicon.glyphicon-time
           | Posted on 
           span.post-date <%= post.userId.timeCreated %>
-        img.img-responsive(src='http://placehold.it/900x300', alt='')
-        p.lead
-          | <%= post.content %>
       <% }); %>
 
     script(type='text/template', id='tmpl-results')

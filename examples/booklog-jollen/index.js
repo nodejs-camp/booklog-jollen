@@ -321,7 +321,7 @@ app.put('/1/post/:postId', function(req, res) {
 /**
  * POST /1/post/:postId/pay
  */
-app.post('/1/post/:postId/pay', function(req, res, next) {
+app.put('/1/post/:postId/pay', function(req, res, next) {
     var workflow = new events.EventEmitter();
     var postId = req.params.postId;
     var posts = req.app.db.posts;
@@ -357,19 +357,19 @@ app.post('/1/post/:postId/pay', function(req, res, next) {
 		            }]
 		};
 
-		paypal_api.payment.create(create_payment_json, function (err, res) {
+		paypal_api.payment.create(create_payment_json, function (err, payment) {
 		    if (err) {
 		        console.log(err);
 		    }
 
-		    if (res) {
+		    if (payment) {
 		        console.log("Create Payment Response");
-		        console.log(res);
+		        console.log(payment);
 		    }
 
 		    var order = {
 		    	userId: req.user._id,
-		    	paypal: res
+		    	paypal: payment
 		    };
 
 			posts
