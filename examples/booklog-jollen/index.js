@@ -352,7 +352,7 @@ app.put('/1/post/:postId/pay', function(req, res, next) {
 		            transactions: [{
 		                amount: {
 		                    currency: 'TWD',
-		                    total: 99
+		                    total: 128
 		                },
 		                description: '購買教學文章'
 		            }]
@@ -400,10 +400,16 @@ app.get('/1/post/:postId/paid', function(req, res, next) {
     };
 
     workflow.on('validate', function() {
-        //paypal.payment.execute(paymentId, { payer_id: payerId }, function (err, payment) {
-        //    return workflow.emit('updateCustomer');
-        //});
-        return workflow.emit('updateCustomer');
+    	posts
+    	.findOne({ _id: postId})
+    	.exec(function(err, post) {
+    		paymentId = post.orders[0].paypal.id;
+
+	        paypal_api.payment.execute(paymentId, { payer_id: payerId }, function (err, payment) {
+	        	workflow.outcome.data = payment;
+	            return workflow.emit('updateCustomer');
+	        });
+    	});
     });
 
     workflow.on('updateCustomer', function() {
