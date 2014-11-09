@@ -8,7 +8,7 @@
  **/
 app.Search = Backbone.Model.extend({  
   url: function() {
-    return 'http://localhost:3000/1/post/tag/' + this.tag
+    return 'http://innoboard.cc/1/post/tag/' + this.tag
   },
   tag: '',
   defaults: {
@@ -25,7 +25,7 @@ app.Search = Backbone.Model.extend({
 
 app.Post = Backbone.Model.extend({  
   url: function() {
-    return 'http://localhost:3000/1/post' + this.query
+    return 'http://innoboard.cc/1/post' + this.query
   },
   query: '',
   defaults: {
@@ -42,7 +42,7 @@ app.Post = Backbone.Model.extend({
 });
 
 app.SinglePost = Backbone.Model.extend({  
-  url: 'http://localhost:3000/1/post',
+  url: 'http://innoboard.cc/1/post',
   defaults: {
     success: false,
     errors: [],
@@ -55,7 +55,7 @@ app.SinglePost = Backbone.Model.extend({
 
 app.PurchasePost = Backbone.Model.extend({  
   url: function() {
-    return 'http://localhost:3000/1/post/' + this.attributes.id + '/pay'
+    return 'http://innoboard.cc/1/post/' + this.attributes.id + '/pay'
   },
   defaults: {
     success: false,
@@ -168,11 +168,11 @@ app.PurchasePost = Backbone.Model.extend({
         this.purchase.set('id', postId);
         this.purchase.save(this.model.attributes, {
           success: function(model, response, options) {
-            alert('訂購成功。等候付款！');
+            $.notify('訂購成功。等候付款！');
             self.model.fetch();
           },
           error: function(model, response, options) {
-            alert('失敗')
+            $.notify('失敗')
           }
         });
     }
